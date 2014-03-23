@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import author="christof"
+        date="23-03-14"
+        desc="Romans de Flaubert, Maupassant et Zola."
+        name="romans"
+        rootDir="/home/christof/Dropbox/4-Lehre/1-Lehre aktuell/2014 Maupassant Digital/Textsammlung/txt-xslt"
+        script="quickLoader.groovy"
+        version="0.7">
+   <linkGrp type="align"/>
+   <corpora>
+      <corpus annotate="true"
+              cqpid="ROMANS1395579498581"
+              desc="Romans de Flaubert, Maupassant et Zola."
+              encoding="UTF-8"
+              font="Arial"
+              lang="fr"
+              name="ROMANS">
+         <tokenizer onlyThoseTests="false"/>
+         <xslt xsl=""/>
+         <pattributes/>
+         <sattributes/>
+         <biblios/>
+         <uis/>
+         <editions default="default">
+       	    <edition mode="groovy" name="default" script="pager.groovy"/>
+         </editions>
+         <texts/>
+         <queries/>
+         <preBuild/>
+      </corpus>
+   </corpora>
+</import>
