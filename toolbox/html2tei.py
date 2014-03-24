@@ -1,24 +1,19 @@
-# htmlfr2tei.py
+# html2tei.py
 
 # Function to transform HTML produced by FineReader into simple, clean TEI files.
 # Makes use of "re"; see: http://docs.python.org/2/library/re.html
 
-# Things to do
-# - Import all necessary functions and classes.
-# - Open and read an html text file.
-# - Do several clean-up steps.
-#       - remove whitespace for better handling
-#       - replace HTML header with XML model header
-#       - remove unnecessary attributes on elements
-#       - create divisions and heads
-#       - turn "i" into "hi rend="italics"
-# - Write new file to disk.
+# Basic structure
+# - Open and read an HTML text file.
+# - Replace HTML header with XML model header
+# - Remove whitespace for better handling
+# - Remove unnecessary attributes on elements
+# - Turn HTML <i> into 'hi rend="italics"'
+# - Turn <h1> etc. into divisions and heads
+# - Do additional cleanup of remaining markup
+# - Write new XML file to disk.
 
 
-# Structure
-# 1. Import statements
-# 2. Definition of functions
-# 3. Main
 
 #######################
 # Import statements   #
@@ -75,7 +70,7 @@ def convert_italics(xmlmutandum):
     """Converts HTML-style italics into TEI-style italics"""
     with open(xmlmutandum,"r") as mutandum:
         mutandum = mutandum.read()
-        #mutandum = re.sub("<i>(.*)</i>",r'<hi rend="italic">\1</hi>',mutandum)
+        mutandum = re.sub("<i>(.*)</i>",r'<hi rend="italic">\1</hi>',mutandum)
         mutandum = re.sub(r'<i class="calibre6">(.*)</i>',r'<hi rend="italic">\1</hi>',mutandum)
         mutandum = re.sub("<span.*?>(.*)</span>","\1",mutandum)
         mutandum = re.sub("<i>","",mutandum)
@@ -117,6 +112,7 @@ def convert_headings(xmlmutandum):
         mutandum = re.sub("<h2>(.*?) </h2>",r'<head>\1</head>',mutandum)        
         mutandum = re.sub("<h2>","<head>Chapitre ",mutandum)
         mutandum = re.sub("</h2>","</head>",mutandum)
+        mutandum = re.sub(r'<div>\n<p>(.{1,15}?)</p>',r'<div><head>\1</head>',mutandum)        
     with open(xmlmutandum,"w") as output:
         output.write(mutandum)
 
@@ -130,6 +126,8 @@ def cleanup_xml(xmlmutandum):
         mutandum = re.sub("&ndash;","--",mutandum)
         mutandum = re.sub("&mdash;","--",mutandum)
         mutandum = re.sub("\n[ ]?\n","\n",mutandum)
+        mutandum = re.sub("<span>","",mutandum)        
+        mutandum = re.sub("</span>","",mutandum)        
     with open(xmlmutandum,"w") as output:
         output.write(mutandum)
 
@@ -146,6 +144,7 @@ def write_xmloutput(xmlmutandum,xmloutput):
 # Main                #
 #######################
 
+
 def main(htmlinput,xmlmutandum,xmloutput,teiheader):
     add_teiheader(htmlinput,xmlmutandum,teiheader)
     remove_whitespace(xmlmutandum) 
@@ -157,6 +156,7 @@ def main(htmlinput,xmlmutandum,xmloutput,teiheader):
     convert_headings(xmlmutandum)
     cleanup_xml(xmlmutandum)
     write_xmloutput(xmlmutandum,xmloutput)
+
             
-main("Flaubert_Bouvard.html","MUTANDUM.xml","Flaubert_Bouvard.xml","teiheader.xml")
+main("Zola_Nana.html","MUTANDUM.xml","Zola_Nana.xml","teiheader.xml")
 
